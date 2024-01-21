@@ -20,18 +20,28 @@ gallery.insertAdjacentHTML('beforeend', markup);
 gallery.addEventListener('click', onClick);
 
 function onClick(evt) {
+        if (evt.target.nodeName !== "IMG") {
+        return;
+    }
     evt.preventDefault();
-    const instance = basicLightbox.create(
-        `<img class="gallery__image" src="${evt.target.dataset.source}" alt="${evt.target.currentSrc}"/>`
+  
+    const instance = basicLightbox.create(`<
+                    <img class="gallery__image" src="${evt.target.dataset.source}" alt="${evt.target.currentSrc}"/>
+           `,  {
+        onShow: () => { 
+            document.addEventListener("keydown", offModal);
+            },
+        onClose: () => {
+            document.removeEventListener("keydown", offModal) 
+            }
+        }
     );
-
     instance.show();
-
-    gallery.addEventListener('keydown', offModal);
-
     function offModal(evt) {
         if (evt.key === 'Escape') {
             instance.close();
-    }};
+        }
+    };
+    
 };
 
